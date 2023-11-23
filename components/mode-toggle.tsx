@@ -29,14 +29,23 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>
-          Light
+        <DropdownMenuItem
+          className="justify-center"
+          onClick={() => setTheme('light')}
+        >
+          浅色模式
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
-          Dark
+        <DropdownMenuItem
+          className="justify-center"
+          onClick={() => setTheme('dark')}
+        >
+          深色模式
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
-          System
+        <DropdownMenuItem
+          className="justify-center"
+          onClick={() => setTheme('system')}
+        >
+          跟随系统
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

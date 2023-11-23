@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
 import {
   Dialog,
@@ -12,37 +13,36 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../ui/dialog';
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
-  FormItem,
   FormField,
+  FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { useEffect, useState } from 'react';
-import { FileUpload } from '../file-upload';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { FileUpload } from '@/components/file-upload';
 import { useRouter } from 'next/navigation';
+import { useModal } from '@/hooks/use-modal-store';
 
 const formSchema = z.object({
   name: z.string().min(1, {
-    message: '服务器名称必须填写',
+    message: 'Server name is required.',
   }),
   imageUrl: z.string().min(1, {
-    message: '服务器图片必须填写',
+    message: 'Server image is required.',
   }),
 });
 
-export const InitialModal = () => {
-  const [IsMounted, setIsMounted] = useState(false);
+export const EditServerModal = () => {
+  const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isModalOpen = isOpen && type === 'editServer';
+  const { server } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -51,29 +51,42 @@ export const InitialModal = () => {
       imageUrl: '',
     },
   });
+
+  useEffect(() => {
+    if (server) {
+      form.setValue('name', server.name);
+      form.setValue('imageUrl', server.imageUrl);
+    }
+  }, [server, form]);
+
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post('/api/servers', values);
+      await axios.patch(`/api/servers/${server?.id}`, values);
 
       form.reset();
       router.refresh();
-      window.location.reload();
+      onClose();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
+
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            创建一个聊天服务器
+            设置你的服务器
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            起个名字和上传一张图片，之后可以修改
+            设置服务器名称和头像
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -96,6 +109,7 @@ export const InitialModal = () => {
                   )}
                 />
               </div>
+
               <FormField
                 control={form.control}
                 name="name"
@@ -107,8 +121,8 @@ export const InitialModal = () => {
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        className="bg-zinc-300/50 border-0 focus-visible:ring/0 text-black focus-visible:ring-offset-0"
-                        placeholder="输入服务器名字"
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                        placeholder="Enter server name"
                         {...field}
                       />
                     </FormControl>
@@ -119,7 +133,7 @@ export const InitialModal = () => {
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button variant="primary" disabled={isLoading}>
-                创建
+                保存
               </Button>
             </DialogFooter>
           </form>
