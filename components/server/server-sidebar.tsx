@@ -9,6 +9,9 @@ import { db } from '@/lib/db';
 
 import { ServerHeader } from './server-header';
 import { ServerSearch } from './server-search';
+import { ServerSection } from './server-section';
+import { ServerChannel } from './server-channel';
+import { ServerMember } from './server-member';
 
 interface ServerSidebarProps {
   serverId: string;
@@ -85,7 +88,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
           <ServerSearch
             data={[
               {
-                label: 'Text Channels',
+                label: '文字频道',
                 type: 'channel',
                 data: textChannels?.map((channel) => ({
                   id: channel.id,
@@ -94,7 +97,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                 })),
               },
               {
-                label: 'Voice Channels',
+                label: '语音频道',
                 type: 'channel',
                 data: audioChannels?.map((channel) => ({
                   id: channel.id,
@@ -103,7 +106,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                 })),
               },
               {
-                label: 'Video Channels',
+                label: '视频频道',
                 type: 'channel',
                 data: videoChannels?.map((channel) => ({
                   id: channel.id,
@@ -112,7 +115,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                 })),
               },
               {
-                label: 'Members',
+                label: '成员',
                 type: 'member',
                 data: members?.map((member) => ({
                   id: member.id,
@@ -123,7 +126,79 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
             ]}
           />
         </div>
-      <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
+        <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
+        {!!textChannels?.length && (
+          <div className="mb-2">
+            <ServerSection
+              sectionType="channels"
+              channelType={ChannelType.TEXT}
+              role={role}
+              label="文字频道"
+            />
+            <div className="space-y-[2px]">
+              {textChannels.map((channel) => (
+                <ServerChannel
+                  key={channel.id}
+                  channel={channel}
+                  role={role}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        {!!audioChannels?.length && (
+          <div className="mb-2">
+            <ServerSection
+              sectionType="channels"
+              channelType={ChannelType.AUDIO}
+              role={role}
+              label="语音频道"
+            />
+            <div className="space-y-[2px]">
+              {audioChannels.map((channel) => (
+                <ServerChannel
+                  key={channel.id}
+                  channel={channel}
+                  role={role}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        {!!videoChannels?.length && (
+          <div className="mb-2">
+            <ServerSection
+              sectionType="channels"
+              channelType={ChannelType.VIDEO}
+              role={role}
+              label="视频频道"
+            />
+            <div className="space-y-[2px]">
+              {videoChannels.map((channel) => (
+                <ServerChannel
+                  key={channel.id}
+                  channel={channel}
+                  role={role}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        {!!members?.length && (
+          <div className="mb-2">
+            <ServerSection
+              sectionType="members"
+              role={role}
+              label="成员"
+              server={server}
+            />
+            <div className="space-y-[2px]">
+              {members.map((member) => (
+                <ServerMember key={member.id} member={member} />
+              ))}
+            </div>
+          </div>
+        )}
       </ScrollArea>
     </div>
   );
