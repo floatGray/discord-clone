@@ -141,6 +141,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                   key={channel.id}
                   channel={channel}
                   role={role}
+                  server={server}
                 />
               ))}
             </div>
@@ -160,6 +161,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                   key={channel.id}
                   channel={channel}
                   role={role}
+                  server={server}
                 />
               ))}
             </div>
@@ -179,6 +181,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                   key={channel.id}
                   channel={channel}
                   role={role}
+                  server={server}
                 />
               ))}
             </div>
