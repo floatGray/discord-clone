@@ -54,14 +54,14 @@ model Member {
   profileId String 
   profile Profile @relation(fields: [profileId],references: [id],onDelete: Cascade)
 
-  serverID String
-  server Server @relation(fields: [serverID],references: [id],onDelete: Cascade)
+  serverId String
+  server Server @relation(fields: [serverId],references: [id],onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([profileId])
-  @@index([serverID])
+  @@index([serverId])
 }
 
 enum ChannelType {
@@ -78,12 +78,12 @@ model Channel {
   profileId String 
   profile Profile @relation(fields: [profileId],references: [id],onDelete: Cascade)
 
-  serverID String
-  server Server @relation(fields: [serverID],references: [id],onDelete: Cascade)
+  serverId String
+  server Server @relation(fields: [serverId],references: [id],onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([profileId])
-  @@index([serverID])
+  @@index([serverId])
 }
